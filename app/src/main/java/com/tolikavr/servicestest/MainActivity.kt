@@ -1,8 +1,12 @@
 package com.tolikavr.servicestest
 
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.tolikavr.servicestest.MyJobService.Companion.JOB_ID
 import com.tolikavr.servicestest.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -26,6 +30,20 @@ class MainActivity : AppCompatActivity() {
 
     binding.intentService.setOnClickListener {
       ContextCompat.startForegroundService(this, MyIntentService.newIntent(this))
+    }
+
+    binding.jobScheduler.setOnClickListener {
+      val componentName = ComponentName(this, MyJobService::class.java)
+
+      val jobInfo = JobInfo.Builder(JOB_ID, componentName)
+        .setRequiresCharging(true)
+        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
+        .setPersisted(true)
+        .setPeriodic(1000)
+        .build()
+
+      val jobScheduler = getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
+      jobScheduler.schedule(jobInfo)
     }
   }
 }

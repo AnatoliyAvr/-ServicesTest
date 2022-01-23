@@ -2,8 +2,6 @@ package com.tolikavr.servicestest
 
 import android.app.job.JobParameters
 import android.app.job.JobService
-import android.content.Intent
-import android.os.IBinder
 import android.util.Log
 import kotlinx.coroutines.*
 
@@ -33,13 +31,18 @@ class MyJobService : JobService() {
     return true
   }
 
-   override fun onDestroy() {
+  override fun onDestroy() {
     super.onDestroy()
     log("onDestroy")
     coroutineScope.cancel()
   }
 
   private fun log(message: String) {
-    Log.d("SERVICE_TAG", "MyService: $message")
+    Log.d("SERVICE_TAG", "MyJobService: $message")
+  }
+
+  companion object {
+
+    const val JOB_ID = 111
   }
 }
